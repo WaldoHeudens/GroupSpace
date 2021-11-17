@@ -1,4 +1,10 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using GroupSpace.Data;
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<GroupSpaceContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("GroupSpaceContext")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
