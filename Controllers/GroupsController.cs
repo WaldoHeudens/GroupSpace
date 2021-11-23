@@ -46,7 +46,10 @@ namespace GroupSpace.Controllers
         // GET: Groups/Create
         public IActionResult Create()
         {
-            return View();
+            // Geef een lege group mee waarin ik mijn default-values heb aangepast
+            Group @group = new Group() { Started = DateTime.Now, Ended = DateTime.MaxValue };
+
+            return View(@group);
         }
 
         // POST: Groups/Create
