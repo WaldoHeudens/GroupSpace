@@ -21,6 +21,14 @@ namespace GroupSpace.Data
                             );
                     context.SaveChanges();
                 }
+ 
+                if (!context.Message.Any())   // Voeg enkele messages toe
+                {
+                    context.Message.AddRange(
+                             new Message { Title = "-", Content = "-", Created = DateTime.Now, GroupID = 1 },
+                             new Message { Title = "- (Naar gezin)", Content = "Een eerste boodschap", Created = DateTime.Now, GroupID = 2 });
+                    context.SaveChanges();
+                }
             }
         }
     }
