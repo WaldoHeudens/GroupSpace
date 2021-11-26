@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GroupSpace.Models.Message>
+﻿@model GroupSpace.Models.MessageIndexViewModel
 
 @{
     ViewData["Title"] = "Boodschappen";
@@ -9,26 +9,39 @@
 <p>
     <a asp-action="Create">Nieuwe Boodschap</a>
 </p>
+
+<p>
+    <form asp-controller="Messages" asp-action="Index" method="get">
+        Title: <input type="text" name="titleFilter" asp-for="TitleFilter"/>
+        &nbsp;
+        Group: <select asp-for="SelectedGroup" asp-items = "Model.GroupsToSelect">
+            <option value="0">Allemaal</option>
+        </select>
+        &nbsp;
+        <input type="submit" value="Filter" />
+    </form>
+</p>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                @Html.DisplayNameFor(model => model.FilteredMessages[0].Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Content)
+                @Html.DisplayNameFor(model => model.FilteredMessages[0].Content)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Created)
+                @Html.DisplayNameFor(model => model.FilteredMessages[0].Created)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Group)
+                @Html.DisplayNameFor(model => model.FilteredMessages[0].Group)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.FilteredMessages) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)

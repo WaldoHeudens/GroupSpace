@@ -20,10 +20,31 @@ namespace GroupSpace.Controllers
         }
 
         // GET: Messages
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string titleFilter, int selectedGroup)
         {
-            var groupSpaceContext = _context.Message.Include(m => m.Group);
-            return View(await groupSpaceContext.ToListAsync());
+            // Lijst alle message op.  We gebruiken Linq
+            var filteredMessages = from m in _context.Message select m;
+
+            // Pas de groepfilter (selectedGroup) toe als deze niet leeg is
+            if (selectedGroup != 0)
+                filteredMessages = from m in filteredMessages where m.GroupID == selectedGroup select m;
+
+            // Pas de titleFilter toe (als deze niet leeg is) en zorg dat de groep-instanties daaraan toegevoegd zijn en sorteer
+            if (!string.IsNullOrEmpty(titleFilter))
+                filteredMessages = from m in filteredMessages where m.Title.Contains(titleFilter) select m;
+
+            // Lijst van groepen 
+            IQueryable<Group> groupsToSelect = from g in _context.Group orderby g.Name select g;
+
+            // Maak een object van de view-model-class en voeg daarin alle wat we nodig hebben
+            MessageIndexViewModel messageIndexViewModel = new MessageIndexViewModel()
+            {
+                TitleFilter = titleFilter,
+                FilteredMessages = await filteredMessages.Include(s=>s.Group).ToListAsync(),
+                SelectedGroup = selectedGroup,
+                GroupsToSelect = new SelectList(await groupsToSelect.ToListAsync(), "Id", "Name", selectedGroup)
+            };
+            return View(messageIndexViewModel);
         }
 
         // GET: Messages/Details/5

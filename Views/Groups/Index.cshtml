@@ -9,6 +9,15 @@
 <p>
     <a asp-action="Create">Groep toevoegen</a>
 </p>
+
+<p>
+    <form asp-action="Index" asp-controller="Groups" method="get">
+        Selecteer:  
+        <input type="text" name="searchField" />
+        <input type="submit" value="Filter"/>
+    </form>
+</p>
+
 <table class="table">
     <thead>
         <tr>

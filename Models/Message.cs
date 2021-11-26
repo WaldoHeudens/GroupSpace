@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GroupSpace.Models
@@ -23,5 +24,13 @@ namespace GroupSpace.Models
         [Display(Name = "Groep")]
         public int GroupID { get; set; }
         public Group? Group { get; set; }
+    }
+
+    public class MessageIndexViewModel
+    {
+        public int SelectedGroup { get; set; }
+        public string TitleFilter { get; set; }
+        public List<Message> FilteredMessages { get; set; }
+        public SelectList GroupsToSelect { get; set; }
     }
 }

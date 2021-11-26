@@ -20,9 +20,20 @@ namespace GroupSpace.Controllers
         }
 
         // GET: Groups
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchField)
         {
-            return View(await _context.Group.ToListAsync());
+            var groups = from g in _context.Group
+                         orderby g.Name
+                         select g;
+
+            if (!string.IsNullOrEmpty(searchField))
+                groups = from g in groups
+                         where g.Name.Contains(searchField)
+                         orderby g.Name
+                         select g;
+
+
+           return View(await groups.ToListAsync());
         }
 
         // GET: Groups/Details/5
