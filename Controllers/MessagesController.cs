@@ -20,7 +20,7 @@ namespace GroupSpace.Controllers
         }
 
         // GET: Messages
-        public async Task<IActionResult> Index(string titleFilter, int selectedGroup)
+        public async Task<IActionResult> Index(string titleFilter, int selectedGroup, string orderBy)
         {
             // Lijst alle message op.  We gebruiken Linq
             var filteredMessages = from m in _context.Message select m;
@@ -32,6 +32,25 @@ namespace GroupSpace.Controllers
             // Pas de titleFilter toe (als deze niet leeg is) en zorg dat de groep-instanties daaraan toegevoegd zijn en sorteer
             if (!string.IsNullOrEmpty(titleFilter))
                 filteredMessages = from m in filteredMessages where m.Title.Contains(titleFilter) select m;
+
+            ViewData["TitleField"] = string.IsNullOrEmpty(orderBy) ? "Titles_Desc" : "";
+            ViewData["GroupField"] = orderBy == "Group" ? "Group_Desc" : "Group";
+
+            switch (orderBy)
+            {
+                case "Group":
+                    filteredMessages = filteredMessages.OrderBy(m => m.Group.Name);
+                    break;
+                case "Group_Desc":
+                    filteredMessages = filteredMessages.OrderByDescending(m => m.Group.Name);
+                    break;
+                case "Titles_Desc":
+                    filteredMessages = filteredMessages.OrderByDescending(m => m.Title);
+                    break;
+                default:
+                    filteredMessages = filteredMessages.OrderBy(m => m.Title);
+                    break;
+            }
 
             // Lijst van groepen 
             IQueryable<Group> groupsToSelect = from g in _context.Group orderby g.Name select g;

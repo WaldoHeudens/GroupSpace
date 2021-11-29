@@ -14,7 +14,7 @@
     <form asp-controller="Messages" asp-action="Index" method="get">
         Title: <input type="text" name="titleFilter" asp-for="TitleFilter"/>
         &nbsp;
-        Group: <select asp-for="SelectedGroup" asp-items = "Model.GroupsToSelect">
+        Group: <select asp-for="SelectedGroup" asp-items="Model.GroupsToSelect">
             <option value="0">Allemaal</option>
         </select>
         &nbsp;
@@ -26,7 +26,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FilteredMessages[0].Title)
+                <a asp-action="Index" asp-route-orderBy="@ViewBag.TitleField">@Html.DisplayNameFor(model => model.FilteredMessages[0].Title)</a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FilteredMessages[0].Content)
@@ -35,7 +35,7 @@
                 @Html.DisplayNameFor(model => model.FilteredMessages[0].Created)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FilteredMessages[0].Group)
+                <a asp-action="Index" asp-route-orderBy="@ViewBag.GroupField">@Html.DisplayNameFor(model => model.FilteredMessages[0].Group)</a>
             </th>
             <th></th>
         </tr>
