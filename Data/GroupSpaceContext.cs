@@ -17,5 +17,11 @@ namespace GroupSpace.Data
         public DbSet<GroupSpace.Models.Group> Group { get; set; }
 
         public DbSet<GroupSpace.Models.Message> Message { get; set; }
+
+        public DbSet<GroupSpace.Models.MediaType> MediaType { get; set; }
+
+        public DbSet<GroupSpace.Models.Category> Category { get; set; }
+
+        public DbSet<GroupSpace.Models.Media> Media { get; set; }
     }
 }

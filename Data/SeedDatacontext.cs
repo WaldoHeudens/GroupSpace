@@ -29,6 +29,31 @@ namespace GroupSpace.Data
                              new Message { Title = "- (Naar gezin)", Content = "Een eerste boodschap", Created = DateTime.Now, GroupID = 2 });
                     context.SaveChanges();
                 }
+
+                if (!context.MediaType.Any())
+                {
+                    context.MediaType.AddRange(
+                        new MediaType { Name = "-", Denominator = "-", Deleted = DateTime.Now },
+                        new MediaType { Name = "Alles", Denominator = "All File (*.*)|*.*|Alle Bestanden", Deleted = DateTime.MaxValue },
+                        new MediaType { Name = "Videos", Denominator = "MP4 (*.mpg)|*.mpg|Videos mp4", Deleted  = DateTime.MaxValue});
+                    context.SaveChanges();
+                }
+
+                if (!context.Category.Any())
+                {
+                    context.Category.AddRange(
+                        new Category { Name = "-", Description = "-"},
+                        new Category { Name = "Family Pictures", Description = "All pictures concerning the whole family"},
+                        new Category { Name = "Holidays", Description = "All holiday media"});
+                    context.SaveChanges();
+                }
+
+                if (!context.Media.Any())
+                {
+                    context.Media.AddRange(
+                        new Media { Name = "-", Description = "-", TypeId = 1, Added = DateTime.Now });
+                    context.SaveChanges();
+                }
             }
         }
     }
