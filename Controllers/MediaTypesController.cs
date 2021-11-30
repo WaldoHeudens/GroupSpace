@@ -22,11 +22,10 @@ namespace GroupSpace.Controllers
         // GET: MediaTypes
         public async Task<IActionResult> Index()
         {
-            var media = _context.Media
-                                    .Include(m => m.Type)
-                                    .Include(m => m.Categories)
-                                    .OrderBy(m => m.Name);
-            return View(await media.ToListAsync());
+            var mediaTypes = _context.MediaType
+                                   .Where(m => m.Deleted > DateTime.Now)
+                                   .OrderBy(m => m.Name);
+            return View(await mediaTypes.ToListAsync());
         }
 
         // GET: MediaTypes/Details/5
@@ -145,7 +144,8 @@ namespace GroupSpace.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var mediaType = await _context.MediaType.FindAsync(id);
-            _context.MediaType.Remove(mediaType);
+            mediaType.Deleted = DateTime.Now;
+//            _context.MediaType.Remove(mediaType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

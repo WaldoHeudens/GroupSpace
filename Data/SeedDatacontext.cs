@@ -42,9 +42,9 @@ namespace GroupSpace.Data
                 if (!context.Category.Any())
                 {
                     context.Category.AddRange(
-                        new Category { Name = "-", Description = "-"},
-                        new Category { Name = "Family Pictures", Description = "All pictures concerning the whole family"},
-                        new Category { Name = "Holidays", Description = "All holiday media"});
+                        new Category { Name = "-", Description = "-", Deleted = DateTime.Now},
+                        new Category { Name = "Family Pictures", Description = "All pictures concerning the whole family", Deleted = DateTime.MaxValue },
+                        new Category { Name = "Holidays", Description = "All holiday media", Deleted = DateTime.MaxValue });
                     context.SaveChanges();
                 }
 

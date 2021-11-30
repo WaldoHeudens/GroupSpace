@@ -58,6 +58,8 @@ namespace GroupSpace.Models
         [Display(Name = "Omschrijving")]
         public string Description { get; set; }
 
+        public DateTime Deleted { get; set; }
+
         public List<Media>? Media {get; set;}
     }
 }

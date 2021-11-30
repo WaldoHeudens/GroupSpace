@@ -140,7 +140,7 @@ namespace GroupSpace.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var category = await _context.Category.FindAsync(id);
-            _context.Category.Remove(category);
+            category.Deleted = DateTime.Now;
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
