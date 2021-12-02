@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GroupSpace.Data;
 using GroupSpace.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GroupSpace.Controllers
-{
+{ 
+    [Authorize]
     public class MediaController : Controller
     {
         private readonly GroupSpaceContext _context;
@@ -20,6 +22,7 @@ namespace GroupSpace.Controllers
         }
 
         // GET: Media
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var groupSpaceContext = _context.Media.Include(m => m.Type)
