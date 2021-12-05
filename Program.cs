@@ -8,17 +8,13 @@ using Microsoft.AspNetCore.Authorization;
 var builder = WebApplication.CreateBuilder(args);
 
 // de connectionString moet manueel toegewezen worden om de nieuwe datacontext te koppelen aan onze bestaande databank
-var connectionString = builder.Configuration.GetConnectionString("GroupSpaceContext");
-
-builder.Services.AddDbContext<GroupSpaceContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("GroupSpaceContext")));
-
-builder.Services.AddDbContext<IdentityContext>(options =>
+var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection");
+builder.Services.AddDbContext<global::GroupSpace.Data.ApplicationDbContext>((global::Microsoft.EntityFrameworkCore.DbContextOptionsBuilder options) =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>((IdentityOptions options) => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<IdentityContext>();
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -70,6 +66,7 @@ app.MapRazorPages();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    SeedDatacontext.Initialize(services);
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    SeedDatacontext.Initialize(services, userManager);
 }
 app.Run();

@@ -12,9 +12,9 @@ namespace GroupSpace.Controllers
 {
     public class CategoriesController : Controller
     {
-        private readonly GroupSpaceContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public CategoriesController(GroupSpaceContext context)
+        public CategoriesController(ApplicationDbContext context)
         {
             _context = context;
         }

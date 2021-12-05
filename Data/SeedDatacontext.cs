@@ -1,16 +1,38 @@
-﻿using GroupSpace.Models;
+﻿using GroupSpace.Areas.Identity.Data;
+using GroupSpace.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace GroupSpace.Data
 {
     public class SeedDatacontext
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static void Initialize(IServiceProvider serviceProvider, UserManager<ApplicationUser> userManager)
         {
-            using (var context = new GroupSpaceContext(serviceProvider.GetRequiredService
-                                                              <DbContextOptions<GroupSpaceContext>>()))
+            using (var context = new ApplicationDbContext(serviceProvider.GetRequiredService
+                                                              <DbContextOptions<ApplicationDbContext>>()))
             {
                 context.Database.EnsureCreated();    // Zorg dat de databank bestaat
+
+                ApplicationUser user = null;
+
+                if(!context.Users.Any())
+                {
+                    user = new ApplicationUser 
+                                { 
+                                    FirstName = "System",
+                                    LastName = "Administrator",
+                                    UserName = "Admin",
+                                    Email = "System.Administrator@GroupSpace.be",
+                                    EmailConfirmed = true
+                                };
+                    userManager.CreateAsync(user, "Abc!12345");
+
+                    context.Roles.AddRange(
+                        new IdentityRole { Id = "User", Name = "User", NormalizedName = "user" },
+                        new IdentityRole { Id = "SystemAdministrator", Name = "SystemAdmninistrator", NormalizedName = "systemadministrator"});
+                    context.SaveChanges();
+                }
 
                 if (!context.Group.Any())      // Voeg enkele groepen toe
                 {
@@ -53,6 +75,12 @@ namespace GroupSpace.Data
                     context.Media.AddRange(
                         new Media { Name = "-", Description = "-", TypeId = 1, Added = DateTime.Now });
                     context.SaveChanges();
+                }
+
+                if (user != null)
+                {
+                    context.UserRoles.AddRange(
+                        new IdentityUserRole<string> { UserId = user.Id, RoleId = "SystemAdministrator"});
                 }
             }
         }

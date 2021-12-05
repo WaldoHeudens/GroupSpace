@@ -14,9 +14,9 @@ namespace GroupSpace.Controllers
     [Authorize (Roles = "Admin")]
     public class MediaTypesController : Controller
     {
-        private readonly GroupSpaceContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public MediaTypesController(GroupSpaceContext context)
+        public MediaTypesController(ApplicationDbContext context)
         {
             _context = context;
         }

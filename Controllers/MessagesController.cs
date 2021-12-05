@@ -14,9 +14,9 @@ namespace GroupSpace.Controllers
     [Authorize]
     public class MessagesController : Controller
     {
-        private readonly GroupSpaceContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public MessagesController(GroupSpaceContext context)
+        public MessagesController(ApplicationDbContext context)
         {
             _context = context;
         }

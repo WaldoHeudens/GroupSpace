@@ -12,9 +12,9 @@ namespace GroupSpace.Controllers
 {
     public class GroupsController : Controller
     {
-        private readonly GroupSpaceContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public GroupsController(GroupSpaceContext context)
+        public GroupsController(ApplicationDbContext context)
         {
             _context = context;
         }
