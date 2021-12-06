@@ -9,7 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // de connectionString moet manueel toegewezen worden om de nieuwe datacontext te koppelen aan onze bestaande databank
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection");
-builder.Services.AddDbContext<global::GroupSpace.Data.ApplicationDbContext>((global::Microsoft.EntityFrameworkCore.DbContextOptionsBuilder options) =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString));builder.Services.AddDbContext<global::GroupSpace.Data.ApplicationDbContext>((global::Microsoft.EntityFrameworkCore.DbContextOptionsBuilder options) =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDefaultIdentity<ApplicationUser>((IdentityOptions options) => options.SignIn.RequireConfirmedAccount = true)
