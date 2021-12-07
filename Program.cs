@@ -4,6 +4,9 @@ using GroupSpace.Data;
 using Microsoft.AspNetCore.Identity;
 using GroupSpace.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using GroupSacePrep.Services;
+using NETCore.MailKit.Infrastructure.Internal;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +22,21 @@ builder.Services.AddDefaultIdentity<ApplicationUser>((IdentityOptions options) =
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Voeg MailKitEmailSender toe als IEmailSender
+builder.Services.AddTransient<IEmailSender, MailKitEmailSender>();
+builder.Services.Configure<MailKitOptions>(options =>
+{
+    options.Server = builder.Configuration["ExternalProviders:MailKit:SMTP:Address"];
+    options.Port = Convert.ToInt32(builder.Configuration["ExternalProviders:MailKit:SMTP:Port"]);
+    options.Account = builder.Configuration["ExternalProviders:MailKit:SMTP:Account"];
+    options.Password = builder.Configuration["ExternalProviders:MailKit:SMTP:Password"];
+    options.SenderEmail = builder.Configuration["ExternalProviders:MailKit:SMTP:SenderEmail"];
+    options.SenderName = builder.Configuration["ExternalProviders:MailKit:SMTP:SenderName"];
+    // Set it to TRUE to enable ssl or tls, FALSE otherwise
+    options.Security = false;
+});
+
 
 // Wijzig de standaard settings van Identity als nodig
 builder.Services.Configure<IdentityOptions>(options =>
