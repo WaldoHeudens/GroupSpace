@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using GroupSpace.Areas.Identity.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -23,7 +24,12 @@ namespace GroupSpace.Models
         [ForeignKey("Group")]
         [Display(Name = "Groep")]
         public int GroupID { get; set; }
+
+        [ForeignKey("ApplicationUser")]
+        [Display(Name = "Verzender")]
+        public string SenderId { get; set; } = "-";
         public Group? Group { get; set; }
+        public ApplicationUser? Sender { get; set; } 
     }
 
     public class MessageIndexViewModel
@@ -32,5 +38,7 @@ namespace GroupSpace.Models
         public string TitleFilter { get; set; }
         public List<Message> FilteredMessages { get; set; }
         public SelectList GroupsToSelect { get; set; }
+        public SelectList ModesToSelect { get; set; }
+        public string SelectedMode { get; set; }
     }
 }

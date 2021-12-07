@@ -12,6 +12,7 @@
 
 <p>
     <form asp-controller="Messages" asp-action="Index" method="get">
+        <h3><select asp-for="SelectedMode" asp-items="Model.ModesToSelect" onchange="this.form.submit()" ></select></h3>
         Title: <input type="text" name="titleFilter" asp-for="TitleFilter"/>
         &nbsp;
         Group: <select asp-for="SelectedGroup" asp-items="Model.GroupsToSelect">

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GroupSpace.Data;
 using GroupSpace.Models;
 using Microsoft.AspNetCore.Authorization;
+using GroupSpace.Areas.Identity.Data;
 
 namespace GroupSpace.Controllers
 {
@@ -22,10 +23,13 @@ namespace GroupSpace.Controllers
         }
 
         // GET: Messages
-        public async Task<IActionResult> Index(string titleFilter, int selectedGroup, string orderBy)
+        public async Task<IActionResult> Index(string titleFilter, int selectedGroup, string orderBy, string selectedMode = "R")
         {
             // Lijst alle message op.  We gebruiken Linq
-            var filteredMessages = from m in _context.Message select m;
+            ApplicationUser user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+            var filteredMessages = from m in _context.Message
+                                   where selectedMode == "S" && m.SenderId == user.Id
+                                   select m;
 
             // Pas de groepfilter (selectedGroup) toe als deze niet leeg is
             if (selectedGroup != 0)
@@ -57,13 +61,22 @@ namespace GroupSpace.Controllers
             // Lijst van groepen 
             IQueryable<Group> groupsToSelect = from g in _context.Group orderby g.Name select g;
 
+            // Selectieveldje voor de mode van gebruik
+            var modeItems = new List<SelectListItem>
+            {
+                new SelectListItem{Value="R", Text="Ontvangen", Selected = selectedMode == "R" },
+                new SelectListItem{Value="S", Text="Verzonden", Selected = selectedMode == "S"}
+            };
+
             // Maak een object van de view-model-class en voeg daarin alle wat we nodig hebben
             MessageIndexViewModel messageIndexViewModel = new MessageIndexViewModel()
             {
                 TitleFilter = titleFilter,
                 FilteredMessages = await filteredMessages.Include(s=>s.Group).ToListAsync(),
                 SelectedGroup = selectedGroup,
-                GroupsToSelect = new SelectList(await groupsToSelect.ToListAsync(), "Id", "Name", selectedGroup)
+                GroupsToSelect = new SelectList(await groupsToSelect.ToListAsync(), "Id", "Name", selectedGroup),
+                ModesToSelect = new SelectList(modeItems, "Value", "Text"),
+                SelectedMode = selectedMode
             };
             return View(messageIndexViewModel);
         }
@@ -104,6 +117,7 @@ namespace GroupSpace.Controllers
         {
             if (ModelState.IsValid)
             {
+                message.Sender = await _context.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
                 _context.Add(message);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

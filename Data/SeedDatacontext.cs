@@ -16,18 +16,24 @@ namespace GroupSpace.Data
 
                 ApplicationUser user = null;
 
-                if(!context.Users.Any())
+                if (!context.Users.Any())
                 {
-                    user = new ApplicationUser 
-                                { 
-                                    FirstName = "System",
-                                    LastName = "Administrator",
-                                    UserName = "Admin",
-                                    Email = "System.Administrator@GroupSpace.be",
-                                    EmailConfirmed = true
-                                };
+                    ApplicationUser dummy = new ApplicationUser { Id = "-", FirstName = "-", LastName = "-", UserName = "-", Email = "?@?.?" };
+                    context.Users.Add(dummy);
+                    context.SaveChanges();
+                    user = new ApplicationUser
+                    {
+                        FirstName = "System",
+                        LastName = "Administrator",
+                        UserName = "Admin",
+                        Email = "System.Administrator@GroupSpace.be",
+                        EmailConfirmed = true
+                    };
                     userManager.CreateAsync(user, "Abc!12345");
-
+                }
+                
+                if (!context.Roles.Any())
+                {
                     context.Roles.AddRange(
                         new IdentityRole { Id = "User", Name = "User", NormalizedName = "user" },
                         new IdentityRole { Id = "SystemAdministrator", Name = "SystemAdmninistrator", NormalizedName = "systemadministrator"});
@@ -47,8 +53,8 @@ namespace GroupSpace.Data
                 if (!context.Message.Any())   // Voeg enkele messages toe
                 {
                     context.Message.AddRange(
-                             new Message { Title = "-", Content = "-", Created = DateTime.Now, GroupID = 1 },
-                             new Message { Title = "- (Naar gezin)", Content = "Een eerste boodschap", Created = DateTime.Now, GroupID = 2 });
+                             new Message { Title = "-", Content = "-", Created = DateTime.Now, GroupID = 1, SenderId = "-" },
+                             new Message { Title = "- (Naar gezin)", Content = "Een eerste boodschap", Created = DateTime.Now, GroupID = 2, SenderId = "-" });
                     context.SaveChanges();
                 }
 
