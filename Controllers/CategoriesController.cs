@@ -10,13 +10,12 @@ using GroupSpace.Models;
 
 namespace GroupSpace.Controllers
 {
-    public class CategoriesController : Controller
+    public class CategoriesController : ApplicationController
     {
-        private readonly ApplicationDbContext _context;
 
-        public CategoriesController(ApplicationDbContext context)
+        public CategoriesController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, ILogger<ApplicationController> logger)
+            : base(context, httpContextAccessor, logger)
         {
-            _context = context;
         }
 
         // GET: Categories

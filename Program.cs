@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using GroupSacePrep.Services;
 using NETCore.MailKit.Infrastructure.Internal;
+using GroupSpace.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>((IdentityOptions options) =
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
 // Voeg MailKitEmailSender toe als IEmailSender
 builder.Services.AddTransient<IEmailSender, MailKitEmailSender>();
@@ -81,6 +83,7 @@ app.MapControllerRoute(
 
 // Toegevoegd op met de identity-pages te kunnen werken
 app.MapRazorPages();
+app.UseMiddleware<SessionUser>();
 
 using (var scope = app.Services.CreateScope())
 {

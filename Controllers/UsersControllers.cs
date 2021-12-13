@@ -6,16 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GroupSpace.Controllers
 {
-    public class UsersControllercs : Controller
+    public class UsersControllers : ApplicationController
     {
 
-        private readonly ApplicationDbContext _context;
-        private readonly IUserStore<ApplicationUser> _userStore;
-        private readonly IRoleStore<IdentityRole> _roleStore;
-
-        public UsersControllercs(ApplicationDbContext context)//_RoleStore = serviceProvider.GetRequiredService<RoleStore<IdentityRole>>());
+        public UsersControllers(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, ILogger<ApplicationController> logger)
+            : base(context, httpContextAccessor, logger)
         {
-
         }
 
         public IActionResult Index()

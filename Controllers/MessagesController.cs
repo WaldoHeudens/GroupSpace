@@ -1,34 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using GroupSpace.Data;
+using GroupSpace.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using GroupSpace.Data;
-using GroupSpace.Models;
-using Microsoft.AspNetCore.Authorization;
-using GroupSpace.Areas.Identity.Data;
 
 namespace GroupSpace.Controllers
 {
     [Authorize]
-    public class MessagesController : Controller
+    public class MessagesController : ApplicationController
     {
-        private readonly ApplicationDbContext _context;
 
-        public MessagesController(ApplicationDbContext context)
+        public MessagesController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, ILogger<ApplicationController> logger) 
+            :base(context, httpContextAccessor, logger)
         {
-            _context = context;
         }
 
         // GET: Messages
         public async Task<IActionResult> Index(string titleFilter, int selectedGroup, string orderBy, string selectedMode = "R")
         {
             // Lijst alle message op.  We gebruiken Linq
-            ApplicationUser user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
             var filteredMessages = from m in _context.Message
-                                   where selectedMode == "S" && m.SenderId == user.Id
+                                   where selectedMode == "S" && m.SenderId == _user.Id
                                    select m;
 
             // Pas de groepfilter (selectedGroup) toe als deze niet leeg is
@@ -117,7 +110,7 @@ namespace GroupSpace.Controllers
         {
             if (ModelState.IsValid)
             {
-                message.Sender = await _context.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+                message.Sender = _user;
                 _context.Add(message);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -1,20 +1,21 @@
-﻿using GroupSpace.Models;
+﻿using GroupSpace.Areas.Identity.Data;
+using GroupSpace.Data;
+using GroupSpace.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace GroupSpace.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : ApplicationController
     {
-        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, ILogger<ApplicationController> logger):base(context, httpContextAccessor, logger)
         {
-            _logger = logger;
         }
 
         public IActionResult Index()
         {
+            ApplicationUser user = _user;
             return View();
         }
 

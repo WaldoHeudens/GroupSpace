@@ -10,13 +10,12 @@ using GroupSpace.Models;
 
 namespace GroupSpace.Controllers
 {
-    public class GroupsController : Controller
+    public class GroupsController : ApplicationController
     {
-        private readonly ApplicationDbContext _context;
 
-        public GroupsController(ApplicationDbContext context)
+        public GroupsController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, ILogger<ApplicationController> logger)
+            : base(context, httpContextAccessor, logger)
         {
-            _context = context;
         }
 
         // GET: Groups

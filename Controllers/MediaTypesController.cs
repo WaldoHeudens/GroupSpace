@@ -12,13 +12,12 @@ using Microsoft.AspNetCore.Authorization;
 namespace GroupSpace.Controllers
 {
     [Authorize (Roles = "Admin")]
-    public class MediaTypesController : Controller
+    public class MediaTypesController : ApplicationController
     {
-        private readonly ApplicationDbContext _context;
 
-        public MediaTypesController(ApplicationDbContext context)
+        public MediaTypesController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, ILogger<ApplicationController> logger)
+            : base(context, httpContextAccessor, logger)
         {
-            _context = context;
         }
 
         // GET: MediaTypes
