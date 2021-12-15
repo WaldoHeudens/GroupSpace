@@ -14,11 +14,24 @@ namespace GroupSpace.Data
             {
                 context.Database.EnsureCreated();    // Zorg dat de databank bestaat
 
+                if (!context.Language.Any())
+                {
+                    context.Language.AddRange(
+                        new Language() { Id = "-", Name = "-", Cultures = "-", IsSystemLanguage = false },
+                        new Language() { Id = "de", Name = "Deutsch", Cultures = "DE", IsSystemLanguage = false },
+                        new Language() { Id = "en", Name = "English", Cultures = "UK;US", IsSystemLanguage = true },
+                        new Language() { Id = "es", Name = "Español", Cultures = "ES", IsSystemLanguage = false },
+                        new Language() { Id = "fr", Name = "français", Cultures = "BE;FR", IsSystemLanguage = true },
+                        new Language() { Id = "nl", Name = "Nederlands", Cultures = "BE;NL", IsSystemLanguage = true }
+                    );
+                    context.SaveChanges();
+                }
+
                 ApplicationUser user = null;
 
                 if (!context.Users.Any())
                 {
-                    ApplicationUser dummy = new ApplicationUser { Id = "-", FirstName = "-", LastName = "-", UserName = "-", Email = "?@?.?" };
+                    ApplicationUser dummy = new ApplicationUser { Id = "-", FirstName = "-", LastName = "-", UserName = "-", Email = "?@?.?", LanguageId = "-" };
                     context.Users.Add(dummy);
                     context.SaveChanges();
                     user = new ApplicationUser
@@ -27,16 +40,17 @@ namespace GroupSpace.Data
                         LastName = "Administrator",
                         UserName = "Admin",
                         Email = "System.Administrator@GroupSpace.be",
+                        LanguageId = "nl",
                         EmailConfirmed = true
                     };
                     userManager.CreateAsync(user, "Abc!12345");
                 }
-                
+
                 if (!context.Roles.Any())
                 {
                     context.Roles.AddRange(
                         new IdentityRole { Id = "User", Name = "User", NormalizedName = "user" },
-                        new IdentityRole { Id = "SystemAdministrator", Name = "SystemAdmninistrator", NormalizedName = "systemadministrator"});
+                        new IdentityRole { Id = "SystemAdministrator", Name = "SystemAdmninistrator", NormalizedName = "systemadministrator" });
                     context.SaveChanges();
                 }
 
@@ -49,7 +63,7 @@ namespace GroupSpace.Data
                             );
                     context.SaveChanges();
                 }
- 
+
                 if (!context.Message.Any())   // Voeg enkele messages toe
                 {
                     context.Message.AddRange(
@@ -63,14 +77,14 @@ namespace GroupSpace.Data
                     context.MediaType.AddRange(
                         new MediaType { Name = "-", Denominator = "-", Deleted = DateTime.Now },
                         new MediaType { Name = "Alles", Denominator = "All File (*.*)|*.*|Alle Bestanden", Deleted = DateTime.MaxValue },
-                        new MediaType { Name = "Videos", Denominator = "MP4 (*.mpg)|*.mpg|Videos mp4", Deleted  = DateTime.MaxValue});
+                        new MediaType { Name = "Videos", Denominator = "MP4 (*.mpg)|*.mpg|Videos mp4", Deleted = DateTime.MaxValue });
                     context.SaveChanges();
                 }
 
                 if (!context.Category.Any())
                 {
                     context.Category.AddRange(
-                        new Category { Name = "-", Description = "-", Deleted = DateTime.Now},
+                        new Category { Name = "-", Description = "-", Deleted = DateTime.Now },
                         new Category { Name = "Family Pictures", Description = "All pictures concerning the whole family", Deleted = DateTime.MaxValue },
                         new Category { Name = "Holidays", Description = "All holiday media", Deleted = DateTime.MaxValue });
                     context.SaveChanges();
@@ -86,8 +100,37 @@ namespace GroupSpace.Data
                 if (user != null)
                 {
                     context.UserRoles.AddRange(
-                        new IdentityUserRole<string> { UserId = user.Id, RoleId = "SystemAdministrator"});
+                        new IdentityUserRole<string> { UserId = user.Id, RoleId = "SystemAdministrator" },
+                        new IdentityUserRole<string> { UserId = user.Id, RoleId = "User" });
+                    context.SaveChanges();
                 }
+
+
+                // Start initialisatie talen op basis van databank
+
+                List<string> supportedLanguages = new List<string>();
+                Language.AllLanguages = context.Language.ToList();
+                Language.LanguageDictionary = new Dictionary<string, Language>();
+                Language.SystemLanguages = new List<Language>();
+
+                supportedLanguages.Add("nl-BE");
+                foreach (Language l in Language.AllLanguages)
+                {
+                    if (l.Id != "-")
+                    {
+                        Language.LanguageDictionary[l.Id] = l;
+                        if (l.IsSystemLanguage)
+                            Language.SystemLanguages.Add(l);
+                        supportedLanguages.Add(l.Id);
+                        string[] even = l.Cultures.Split(";");
+                        foreach (string e in even)
+                        {
+                            supportedLanguages.Add(l.Id + "-" + e);
+                        }
+                    }
+                }
+                Language.SupportedLanguages = supportedLanguages.ToArray();
+
             }
         }
     }

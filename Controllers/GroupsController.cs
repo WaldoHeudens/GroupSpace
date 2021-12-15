@@ -7,15 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GroupSpace.Data;
 using GroupSpace.Models;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.Localization;
 
 namespace GroupSpace.Controllers
 {
     public class GroupsController : ApplicationController
     {
+        private readonly IStringLocalizer<GroupsController> _localizer;
 
-        public GroupsController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, ILogger<ApplicationController> logger)
+        public GroupsController(ApplicationDbContext context, 
+                                IHttpContextAccessor httpContextAccessor, 
+                                ILogger<ApplicationController> logger, 
+                                IStringLocalizer<GroupsController> localizer)
             : base(context, httpContextAccessor, logger)
         {
+            _localizer = localizer;
         }
 
         // GET: Groups
@@ -31,8 +38,9 @@ namespace GroupSpace.Controllers
                          orderby g.Name
                          select g;
 
+            ViewData["Voorbeeldje"] = _localizer["Dit is een voorbeeldje"];
 
-           return View(await groups.ToListAsync());
+            return View(await groups.ToListAsync());
         }
 
         // GET: Groups/Details/5

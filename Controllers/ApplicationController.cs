@@ -2,6 +2,7 @@
 using GroupSpace.Data;
 using GroupSpace.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace GroupSpace.Controllers
 {

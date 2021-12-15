@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using GroupSpace.Areas.Identity.Data;
+using GroupSpace.Data;
+using Microsoft.AspNetCore.Localization;
 
 namespace GroupSpace.Areas.Identity.Pages.Account
 {
@@ -22,11 +24,13 @@ namespace GroupSpace.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly ApplicationDbContext _dbContext;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, ApplicationDbContext dbContext)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _dbContext = dbContext;
         }
 
         /// <summary>
@@ -115,6 +119,11 @@ namespace GroupSpace.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    string languageId = _dbContext.Users.FirstOrDefault(u => u.UserName == Input.UserName).LanguageId;
+                    Response.Cookies.Append(
+                        CookieRequestCultureProvider.DefaultCookieName,
+                        CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(languageId)),
+                        new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) });
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

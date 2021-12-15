@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+<!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="utf-8" />
@@ -22,24 +26,24 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Groups" asp-action="Index">Groepen</a>
+                                <a class="nav-link text-dark" asp-controller="Groups" asp-action="Index"> @Localizer["Groepen"]</a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown">Mediabeheer</a>
+                                <a href="#" class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown">@Localizer["Mediabeheer"]</a>
                                 <ul class="dropdown-menu">
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-controller="Media" asp-action="Index">Media</a>
+                                        <a class="nav-link text-dark" asp-controller="Media" asp-action="Index">@Localizer["Media"]</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-controller="MediaTypes" asp-action="Index">Types</a>
+                                        <a class="nav-link text-dark" asp-controller="MediaTypes" asp-action="Index">@Localizer["Types"]</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-controller="Categories" asp-action="Index">Categorieën</a>
+                                        <a class="nav-link text-dark" asp-controller="Categories" asp-action="Index">@Localizer["Categorieën"]</a>
                                     </li>
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Messages" asp-action="Index">Boodschappen</a>
+                                <a class="nav-link text-dark" asp-controller="Messages" asp-action="Index">@Localizer["Boodschappen"]</a>
                             </li>
                         }
                         <li class="nav-item">
@@ -47,6 +51,10 @@
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                    <partial name="_LanguagePartial" />
+                    }
                 </div>
             </div>
         </nav>

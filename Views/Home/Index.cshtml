@@ -1,12 +1,16 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@{
     ViewData["Title"] = "Startpagina";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welkom bij GroupSpace</h1>
+    <h1 class="display-4">@Localizer["Welkom bij GroupSpace"]</h1>
 </div>
 <div style="margin-top:40px">
-    <h4>GroupSpace is een educatief voorbeeld voor het bouwen van een website met ASP.NET Core (MVC) gebruikt voor de module ".NET Frameworks".</h4>
+    <h4>@Localizer["GroupSpace is een educatief voorbeeld voor het bouwen van een website met ASP.NET Core (MVC) gebruikt voor de module .NET Frameworks."]</h4>
 </div>
 <div style="margin-top:40px">
     <h5>Volgende fasen werden gerealiseerd:</h5>

@@ -1,7 +1,13 @@
 ﻿@page
 @model RegisterModel
+
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = Localizer["Registratie nieuwe gebruiker"];
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -9,7 +15,7 @@
 <div class="row">
     <div>
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Nieuwe profiel.</h2>
+            <h2>@Localizer["Nieuwe profiel."]</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating">

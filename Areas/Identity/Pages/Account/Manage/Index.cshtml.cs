@@ -7,7 +7,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using GroupSpace.Areas.Identity.Data;
+using GroupSpace.Data;
+using GroupSpace.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -15,15 +18,18 @@ namespace GroupSpace.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {
+        private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
         public IndexModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            ApplicationDbContext dbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _dbContext = dbContext;
         }
 
         /// <summary>
@@ -65,6 +71,10 @@ namespace GroupSpace.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Display(Name = "Taal")]
+            public string LanguageId { get; set; }
+
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -78,8 +88,11 @@ namespace GroupSpace.Areas.Identity.Pages.Account.Manage
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                LanguageId = user.LanguageId
             };
+            ViewData["Languages"] = Language.SystemLanguages;
+            ViewData["LanguageId"] = user.LanguageId;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -96,7 +109,8 @@ namespace GroupSpace.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await _userManager.GetUserAsync(User);
+            //            var user = await _userManager.GetUserAsync(User);
+            ApplicationUser user = _dbContext.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -108,11 +122,22 @@ namespace GroupSpace.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            if (user.FirstName != Input.FirstName || user.LastName != Input.LastName)
+            if (user.FirstName != Input.FirstName 
+                || user.LastName != Input.LastName 
+                || user.LanguageId != Input.LanguageId)
             {
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
-                _userManager.UpdateAsync(user);
+                user.Language = _dbContext.Language.FirstOrDefault(l => l.Id == Input.LanguageId);
+                user.LanguageId = Input.LanguageId;
+                _dbContext.Update(user);
+                _dbContext.SaveChanges();
+
+                // Update the language/culture
+                Response.Cookies.Append(
+                    CookieRequestCultureProvider.DefaultCookieName,
+                    CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(Input.LanguageId)),
+                    new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) });
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);

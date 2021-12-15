@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using GroupSacePrep.Services;
 using NETCore.MailKit.Infrastructure.Internal;
 using GroupSpace.Services;
+using GroupSpace.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,9 +22,14 @@ builder.Services.AddDefaultIdentity<ApplicationUser>((IdentityOptions options) =
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddMvc()
+       .AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix)
+       .AddDataAnnotationsLocalization();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddLocalization(option => option.ResourcesPath = "Localizing");
 
 // Voeg MailKitEmailSender toe als IEmailSender
 builder.Services.AddTransient<IEmailSender, MailKitEmailSender>();
@@ -63,8 +69,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 
-var app = builder.Build();
 
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -72,10 +78,22 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
 }
 app.UseStaticFiles();
-
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    SeedDatacontext.Initialize(services, userManager);
+}
+
+var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture("nl-BE")
+     .AddSupportedCultures(Language.SupportedLanguages)
+     .AddSupportedUICultures(Language.SupportedLanguages);
+
+app.UseRequestLocalization(localizationOptions);
 
 app.MapControllerRoute(
     name: "default",
@@ -85,10 +103,5 @@ app.MapControllerRoute(
 app.MapRazorPages();
 app.UseMiddleware<SessionUser>();
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-    SeedDatacontext.Initialize(services, userManager);
-}
+
 app.Run();
