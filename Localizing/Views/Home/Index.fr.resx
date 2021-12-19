@@ -117,10 +117,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GroupSpace is een educatief voorbeeld voor het bouwen van een website met ASP.NET Core (MVC) gebruikt voor de module .NET Frameworks." xml:space="preserve">
-    <value>GroupSpace est une exemple &lt;b&gt;éducative&lt;/b&gt; pour la construction d'une site web avec ASP.NET Core (MVC) qu'on utilise dans la module .NET Frameworks.</value>
+  <data name="Algemeen" xml:space="preserve">
+    <value>GroupSpace est une example éducative pour le dévellopement d'une site Web avec ASP.NET Core (MVC), qu'on utilise pendan les cours .NET Advanced (Graduat Programmation à l'EHB).</value>
   </data>
-  <data name="Welkom bij GroupSpace" xml:space="preserve">
+  <data name="Fase 1" xml:space="preserve">
+    <value>- Créer une application</value>
+  </data>
+  <data name="Fase 2" xml:space="preserve">
+    <value>- Scaffolding</value>
+  </data>
+  <data name="Fase 3" xml:space="preserve">
+    <value>- Entity Frameworks</value>
+  </data>
+  <data name="Fase 4" xml:space="preserve">
+    <value>- Identity</value>
+  </data>
+  <data name="Fase 5" xml:space="preserve">
+    <value>- Dependency Injection &amp; Middleware</value>
+  </data>
+  <data name="Fase 6" xml:space="preserve">
+    <value>- Localization (project multi langues)</value>
+  </data>
+  <data name="Fase 7" xml:space="preserve">
+    <value>- Publication</value>
+  </data>
+  <data name="Gebruik" xml:space="preserve">
+    <value>Pour commencer:</value>
+  </data>
+  <data name="GitHub" xml:space="preserve">
+    <value>Les sources sont disponible sur GitHub (voire Canvas)</value>
+  </data>
+  <data name="Invitation designers" xml:space="preserve">
+    <value>Ce cite web n'a pas encore passé chez des designers.  Seulement la fonctionalité a eu un peu d'attentions.  Avec ceci, on &lt;b&gt;invite des designer&lt;/b&gt; à montrer leur pouvoir.</value>
+  </data>
+  <data name="Samen testen" xml:space="preserve">
+    <value>Essaye de tester l'application ainsi beaucoup que possible, de préférence ensemble.</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Afin de commencer à utiliser l'application:  &lt;p&gt;- Régistre comme utilisateur&lt;/p&gt;&lt;p&gt;- et confirme la régistration en utilisant l'émail reçu&lt;/p&gt;</value>
+  </data>
+  <data name="Startpagina" xml:space="preserve">
+    <value>Page de démarrage</value>
+  </data>
+  <data name="Titel fasen" xml:space="preserve">
+    <value>Les modules Canvas suivantes ont été réalisées</value>
+  </data>
+  <data name="Welkom" xml:space="preserve">
     <value>Bienvenu chez GroupSpace</value>
   </data>
 </root>

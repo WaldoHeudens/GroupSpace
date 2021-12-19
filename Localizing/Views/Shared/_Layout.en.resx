@@ -117,14 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Beheren groepen" xml:space="preserve">
+    <value>Manage your groups</value>
+  </data>
   <data name="Boodschappen" xml:space="preserve">
     <value>Messages</value>
   </data>
   <data name="Categorieën" xml:space="preserve">
     <value>Cathegrories</value>
   </data>
+  <data name="Groep maken" xml:space="preserve">
+    <value>Create a group</value>
+  </data>
   <data name="Groepen" xml:space="preserve">
     <value>Groups</value>
+  </data>
+  <data name="Lidmaatschap aanvragen" xml:space="preserve">
+    <value>Group membership</value>
   </data>
   <data name="Media" xml:space="preserve">
     <value>Media</value>

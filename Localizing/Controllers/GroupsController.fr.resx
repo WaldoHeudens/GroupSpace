@@ -117,7 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Dit is een voorbeeldje" xml:space="preserve">
-    <value>Ceci est une example</value>
+  <data name="Bevestig je lidmaatschap" xml:space="preserve">
+    <value>Vous êtes invité de participer à la groupe {0} en GroupSpace  Vous avez été invité par {1}.  Vous pouvez confirmer votre adhésion en clickant sur &lt;a href='{[HtmlEncoder.Default.Encode(callbackUrl)}}'&gt; ce lien&lt;/a&gt;.
+Si vous n'êtes pas encore registré sur GroupSpace, vous serez demander de finir votre registration d'abort avec l'adresse email {2}.</value>
+  </data>
+  <data name="Bevestiging van een groeplidmaatschap op GroupSpace" xml:space="preserve">
+    <value>Confirmation de votre adhésion à une group sur GroupSpace</value>
   </data>
 </root>

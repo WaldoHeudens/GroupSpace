@@ -9,6 +9,7 @@ using GroupSacePrep.Services;
 using NETCore.MailKit.Infrastructure.Internal;
 using GroupSpace.Services;
 using GroupSpace.Models;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,7 +69,10 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = false;
 });
 
-
+// Zorg ervoor dat TempData beschouwd wordt als essentiële cookie, en dus altijd bestaat
+builder.Services.Configure<CookieTempDataProviderOptions>(options => {
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 

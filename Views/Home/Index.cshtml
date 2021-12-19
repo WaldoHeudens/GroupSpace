@@ -3,16 +3,42 @@
 @inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Startpagina";
+    ViewData["Title"] = Localizer["Startpagina"];
 }
 
-<div class="text-center">
-    <h1 class="display-4">@Localizer["Welkom bij GroupSpace"]</h1>
+<div class="textopr">
+    <h1 class="display-4">@Localizer["Welkom"]</h1>
 </div>
-<div style="margin-top:40px">
-    <h4>@Localizer["GroupSpace is een educatief voorbeeld voor het bouwen van een website met ASP.NET Core (MVC) gebruikt voor de module .NET Frameworks."]</h4>
+<div style="margin-top:60px">
+    <h4>@Localizer["Algemeen"]</h4>
 </div>
+<table style="padding-top:20px;margin-top:30px">
+    <tr>
+        <td class="col-md-5">
+            <div><h5>@Localizer["Titel fasen"]</h5></div>
+        </td>
+        <td class="col-md-1"></td>
+        <td class="col-md-5">
+            <div><h5>@Localizer["Gebruik"]</h5></div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div>@Localizer["Fase 1"]</div>
+            <div>@Localizer["Fase 2"]</div>
+            <div>@Localizer["Fase 3"]</div>
+            <div>@Localizer["Fase 4"]</div>
+            <div>@Localizer["Fase 5"]</div>
+            <div>@Localizer["Fase 6"]</div>
+        </td>
+        <td></td>
+        <td>
+            <div>@Localizer["Start"]</div>
+            <div>@Localizer["GitHub"]</div>
+        </td>
+    </tr>
+</table>
 <div style="margin-top:40px">
-    <h5>Volgende fasen werden gerealiseerd:</h5>
-    <p>- Ingeven en aanpassen van <a asp-controller="Groups" asp-action="Index">Groepen</a></p>
+    <h5>@Localizer["Samen testen"]</h5>
+    <h5>@Localizer["Invitation designers"]</h5>
 </div>

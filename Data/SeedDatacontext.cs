@@ -58,11 +58,19 @@ namespace GroupSpace.Data
                 {
                     context.Group.AddRange
                             (
-                                     new Group { Name = "?", Description = "?", Started = DateTime.MinValue, Ended = DateTime.Now },
-                                     new Group { Name = "Testgroep", Description = "Uitsluitend om te testen", Started = DateTime.Now, Ended = DateTime.MaxValue }
+                                     new Group { Name = "?", Description = "?", Started = DateTime.MinValue, Ended = DateTime.Now, StartedById = "-", EndedById = "-" },
+                                     new Group { Name = "Testgroep", Description = "Uitsluitend om te testen", Started = DateTime.Now, Ended = DateTime.MaxValue, StartedById = "-", EndedById = "-" }
                             );
                     context.SaveChanges();
                 }
+
+                if (!context.UserGroup.Any())
+                {
+                    context.UserGroup.AddRange(
+                        new UserGroup { UserId = "-", GroupId = 1 });
+                    context.SaveChanges();
+                }
+
 
                 if (!context.Message.Any())   // Voeg enkele messages toe
                 {

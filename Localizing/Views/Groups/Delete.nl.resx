@@ -117,10 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GroupSpace is een educatief voorbeeld voor het bouwen van een website met ASP.NET Core (MVC) gebruikt voor de module .NET Frameworks." xml:space="preserve">
-    <value>GroupSpace is an educatif sample for building websiteds based on ASP.NET Core (MVC) technology, used during the module .NET Frameworks.</value>
+  <data name="Ben je zeker dat je deze groep wil verwijderen?" xml:space="preserve">
+    <value>Ben je zeker dat je deze groep wil verwijderen?</value>
   </data>
-  <data name="Welkom bij GroupSpace" xml:space="preserve">
-    <value>Welcome in GroupSpace</value>
+  <data name="Terug naar overzicht" xml:space="preserve">
+    <value>Terug naar overzicht</value>
+  </data>
+  <data name="Verwijder" xml:space="preserve">
+    <value>Verwijder</value>
+  </data>
+  <data name="Verwijder groep" xml:space="preserve">
+    <value>Verwijder groep</value>
   </data>
 </root>

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using GroupSpace.Areas.Identity.Data;
 using GroupSpace.Data;
+using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Localization;
 
 namespace GroupSpace.Areas.Identity.Pages.Account
@@ -25,12 +26,14 @@ namespace GroupSpace.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly ApplicationDbContext _dbContext;
+        private readonly IStringLocalizer<LoginModel> _localizer;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, ApplicationDbContext dbContext)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, ApplicationDbContext dbContext, IStringLocalizer<LoginModel> localizer)
         {
             _signInManager = signInManager;
             _logger = logger;
             _dbContext = dbContext;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -70,6 +73,7 @@ namespace GroupSpace.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
+            [Display(Name = "UserName")]
             public string UserName { get; set; }
 
             /// <summary>
@@ -77,6 +81,7 @@ namespace GroupSpace.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
+            [Display(Name = "Password")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -118,7 +123,7 @@ namespace GroupSpace.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
+                    _logger.LogInformation(_localizer["User logged in."]);
                     string languageId = _dbContext.Users.FirstOrDefault(u => u.UserName == Input.UserName).LanguageId;
                     Response.Cookies.Append(
                         CookieRequestCultureProvider.DefaultCookieName,
@@ -132,12 +137,12 @@ namespace GroupSpace.Areas.Identity.Pages.Account
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
+                    _logger.LogWarning(_localizer["User account locked out."]);
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, _localizer["Invalid login attempt."]);
                     return Page();
                 }
             }

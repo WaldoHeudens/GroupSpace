@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Begonnen" xml:space="preserve">
-    <value>Commencée</value>
+    <value>Groupe existe depuis</value>
   </data>
   <data name="Beëindigd" xml:space="preserve">
-    <value>Terminée</value>
+    <value>Terminée le</value>
   </data>
   <data name="Naam" xml:space="preserve">
     <value>Nom</value>

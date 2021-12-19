@@ -31,4 +31,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     }
 
     public DbSet<GroupSpace.Models.Language> Language { get; set; }
+
+    public DbSet<GroupSpace.Models.UserGroup> UserGroup { get; set; }
+
+    public DbSet<GroupSpace.Models.Token> Token { get; set; }
 }

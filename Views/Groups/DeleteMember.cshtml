@@ -1,0 +1,41 @@
+﻿@model GroupSpace.Models.UserGroup
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Verwijder gebruiker"];
+}
+
+<h1>@Localizer["Verwijder gebruiker"]</h1>
+
+<h3>@Model.Group.Name: @Localizer["Ben je zeker dat je deze gebruiker wil verwijderen?"]</h3>
+<div>
+   <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.User.FirstName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.User.FirstName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.User.LastName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.User.LastName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Added)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Added)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value=@Localizer["Verwijder"] class="btn btn-danger" /> |
+        <a asp-action="Index">@Localizer["Terug naar ledenlijst"]</a>
+    </form>
+</div>

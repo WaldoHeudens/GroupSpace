@@ -9,10 +9,12 @@ using System.Threading.Tasks;
 using GroupSpace.Areas.Identity.Data;
 using GroupSpace.Data;
 using GroupSpace.Models;
+using GroupSpace.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Localization;
 
 namespace GroupSpace.Areas.Identity.Pages.Account.Manage
 {
@@ -21,15 +23,18 @@ namespace GroupSpace.Areas.Identity.Pages.Account.Manage
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IStringLocalizer<IndexModel> _localizer;
 
         public IndexModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ApplicationDbContext dbContext)
+            ApplicationDbContext dbContext,
+            IStringLocalizer<IndexModel> localizer)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _dbContext = dbContext;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -132,6 +137,9 @@ namespace GroupSpace.Areas.Identity.Pages.Account.Manage
                 user.LanguageId = Input.LanguageId;
                 _dbContext.Update(user);
                 _dbContext.SaveChanges();
+
+                // verwijder de gebruiker uit de actieve SessionUser-lijst
+                SessionUser.Delete(user.UserName);
 
                 // Update the language/culture
                 Response.Cookies.Append(

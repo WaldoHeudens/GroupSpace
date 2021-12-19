@@ -17,5 +17,10 @@ public class ApplicationUser : IdentityUser
     [ForeignKey ("Language")]
     public string LanguageId { get; set; }
     public Language? Language { get; set; }
+
+    [ForeignKey ("Group")]
+    public int? ActualGroupId { get; set; }  // Nullable, to avoid cascading key conflicts with GroupUser
+    public Group? ActualGroup { get; set; }
+    public List<UserGroup>? Groups { get; set; }
 }
 

@@ -1,8 +1,12 @@
 ﻿@page
-@using GroupSpace.Models
 @model IndexModel
+
+@using GroupSpace.Models
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = Localizer["Profile"];
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
@@ -40,7 +44,7 @@
                 </select>
                 <label asp-for="Input.LanguageId" class="form-label"></label>
             </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">@Localizer["Save"]</button>
         </form>
     </div>
 </div>

@@ -15,7 +15,6 @@ namespace GroupSpace.Controllers
 
         public IActionResult Index()
         {
-            ApplicationUser user = _user;
             return View();
         }
 

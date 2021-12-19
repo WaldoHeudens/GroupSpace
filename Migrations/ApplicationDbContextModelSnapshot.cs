@@ -17,7 +17,7 @@ namespace GroupSpace.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("ProductVersion", "6.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -43,6 +43,9 @@ namespace GroupSpace.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ActualGroupId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -103,6 +106,8 @@ namespace GroupSpace.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ActualGroupId");
+
                     b.HasIndex("LanguageId");
 
                     b.HasIndex("NormalizedEmail")
@@ -155,12 +160,20 @@ namespace GroupSpace.Migrations
                     b.Property<DateTime>("Ended")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("EndedById")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Started")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("StartedById")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -276,6 +289,67 @@ namespace GroupSpace.Migrations
                     b.HasIndex("SenderId");
 
                     b.ToTable("Message");
+                });
+
+            modelBuilder.Entity("GroupSpace.Models.Token", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Added")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AddedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ConnectedId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Connection")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Token");
+                });
+
+            modelBuilder.Entity("GroupSpace.Models.UserGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Added")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("BecameHost")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Left")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("NoHostAnymore")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserGroup");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -432,11 +506,17 @@ namespace GroupSpace.Migrations
 
             modelBuilder.Entity("GroupSpace.Areas.Identity.Data.ApplicationUser", b =>
                 {
+                    b.HasOne("GroupSpace.Models.Group", "ActualGroup")
+                        .WithMany()
+                        .HasForeignKey("ActualGroupId");
+
                     b.HasOne("GroupSpace.Models.Language", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ActualGroup");
 
                     b.Navigation("Language");
                 });
@@ -469,6 +549,25 @@ namespace GroupSpace.Migrations
                     b.Navigation("Group");
 
                     b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("GroupSpace.Models.UserGroup", b =>
+                {
+                    b.HasOne("GroupSpace.Models.Group", "Group")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GroupSpace.Areas.Identity.Data.ApplicationUser", "User")
+                        .WithMany("Groups")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -520,6 +619,16 @@ namespace GroupSpace.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("GroupSpace.Areas.Identity.Data.ApplicationUser", b =>
+                {
+                    b.Navigation("Groups");
+                });
+
+            modelBuilder.Entity("GroupSpace.Models.Group", b =>
+                {
+                    b.Navigation("UserGroups");
                 });
 #pragma warning restore 612, 618
         }
