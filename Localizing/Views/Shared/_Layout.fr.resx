@@ -126,6 +126,9 @@
   <data name="Categorieën" xml:space="preserve">
     <value>Catégories</value>
   </data>
+  <data name="Gebruikersbeheer" xml:space="preserve">
+    <value>Utilisateurs</value>
+  </data>
   <data name="Groep maken" xml:space="preserve">
     <value>Créer une groupe</value>
   </data>

@@ -1,0 +1,135 @@
+﻿@model PaginatedList<GroupSpace.Areas.Identity.Data.ApplicationUserViewModel>
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer;
+
+@{
+    ViewData["Title"] = Localizer["Gebruikersbeheer"];
+    string VerticaalStreepje = " | ";
+}
+
+<h1>@Localizer["Index"]</h1>
+
+   
+<table class="table">
+<form asp-controller="Users" asp-action="Index" method="get">
+    <thead>
+        <tr>
+            <th>
+                @Localizer["Gebruikersnaam"]
+            </th>
+            <th>
+                @Localizer["Voornaam"]
+            </th>
+            <th>
+                @Localizer["Familienaam"]
+            </th>
+            <th>
+                @Localizer["Email"]
+            </th>
+            <th>
+                @Localizer["Taal"]
+            </th>
+            <th>
+                @Localizer["Telefoonnummer"]
+            </th>
+            <th>
+                @Localizer["Buitengesloten"]
+            </th>
+            <th colspan=3 class="align-content-center">@Localizer["Roles"]</th>
+            <th></th>
+        </tr>
+        <tr>
+            <th>
+                <input type="text" name="userName" value=@ViewData["userName"] >
+            </th>
+            <th colspan=2 class="align-content-center">
+                <input type="text" name="name" value=@ViewData["name"] >
+            </th>
+            <th>
+                 <input type="text" name="email" value=@ViewData["email"] >
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>U</th>
+            <th>SA</th>
+            <th>US</th>
+            <th>
+                <input type="submit" value=@Localizer["Filter"] >
+            </th>
+        </tr>
+    </thead>
+     </form>
+    <tbody>
+
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Language)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td class="align-content-center">
+                @Html.DisplayFor(modelItem => item.Lockout)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SystemAdministrator)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserAdministrator)
+            </td>
+            
+            <td>
+                @if (!item.Lockout)
+                {
+                    <a asp-action="Locking" asp-route-id="@item.Id">@Localizer["Lock"]</a> @VerticaalStreepje
+                }
+                else
+                {
+                    <a asp-action="Locking" asp-route-id="@item.Id">@Localizer["Unlock"]</a> @VerticaalStreepje
+                }
+                <a asp-action="Roles" asp-route-id="@item.Id">@Localizer["Roles"]</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-userName=@ViewData["userName"] 
+   asp-route-email=@ViewData["email"]
+   asp-route-name=@ViewData["name"]
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   class="btn btn-default @prevDisabled">
+   @Localizer["Previous"]
+</a>
+<a asp-action="Index"
+   asp-route-userName=@ViewData["userName"] 
+   asp-route-name=@ViewData["name"]
+   asp-route-email=@ViewData["email"]
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   class="btn btn-default @nextDisabled">
+   @Localizer["Next"]
+</a>

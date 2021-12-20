@@ -117,34 +117,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Beheren groepen" xml:space="preserve">
-    <value>Beheren groepen</value>
+  <data name="Buitengesloten" xml:space="preserve">
+    <value>Accepté</value>
   </data>
-  <data name="Boodschappen" xml:space="preserve">
-    <value>Boodschappen</value>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
   </data>
-  <data name="Categorieën" xml:space="preserve">
-    <value>Categorieën</value>
+  <data name="Familienaam" xml:space="preserve">
+    <value>Nom de famille</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Filtre</value>
   </data>
   <data name="Gebruikersbeheer" xml:space="preserve">
-    <value>Gebruikersbeheer</value>
+    <value>Gestion des utilisateurs</value>
   </data>
-  <data name="Groep maken" xml:space="preserve">
-    <value>Groep maken</value>
+  <data name="Gebruikersnaam" xml:space="preserve">
+    <value>Nom d'utilisateur</value>
   </data>
-  <data name="Groepen" xml:space="preserve">
-    <value>Groepen</value>
+  <data name="Index" xml:space="preserve">
+    <value>Utilisateurs</value>
   </data>
-  <data name="Lidmaatschap aanvragen" xml:space="preserve">
-    <value>Lidmaatschap aanvragen</value>
+  <data name="Lock" xml:space="preserve">
+    <value>Lock</value>
   </data>
-  <data name="Media" xml:space="preserve">
-    <value>Media</value>
+  <data name="Name" xml:space="preserve">
+    <value>Nom</value>
   </data>
-  <data name="Mediabeheer" xml:space="preserve">
-    <value>Mediabeheer</value>
+  <data name="Next" xml:space="preserve">
+    <value>Prochaine</value>
   </data>
-  <data name="Types" xml:space="preserve">
-    <value>Types</value>
+  <data name="Previous" xml:space="preserve">
+    <value>Précedente</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Rôles</value>
+  </data>
+  <data name="Taal" xml:space="preserve">
+    <value>Langue</value>
+  </data>
+  <data name="Telefoonnummer" xml:space="preserve">
+    <value>N° de téléphone</value>
+  </data>
+  <data name="Unlock" xml:space="preserve">
+    <value>Exclu</value>
+  </data>
+  <data name="Voornaam" xml:space="preserve">
+    <value>Prénom</value>
   </data>
 </root>

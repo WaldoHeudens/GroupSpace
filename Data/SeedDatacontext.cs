@@ -50,10 +50,10 @@ namespace GroupSpace.Data
                 {
                     context.Roles.AddRange(
                         new IdentityRole { Id = "User", Name = "User", NormalizedName = "user" },
-                        new IdentityRole { Id = "SystemAdministrator", Name = "SystemAdmninistrator", NormalizedName = "systemadministrator" });
+                        new IdentityRole { Id = "SystemAdministrator", Name = "SystemAdmninistrator", NormalizedName = "systemadministrator" },
+                        new IdentityRole { Id = "UserAdministrator", Name = "UserAdministrator", NormalizedName = "useradministrator" });
                     context.SaveChanges();
                 }
-
                 if (!context.Group.Any())      // Voeg enkele groepen toe
                 {
                     context.Group.AddRange
@@ -108,6 +108,7 @@ namespace GroupSpace.Data
                 if (user != null)
                 {
                     context.UserRoles.AddRange(
+                        new IdentityUserRole<string> { UserId = user.Id, RoleId = "UserAdministrator" },
                         new IdentityUserRole<string> { UserId = user.Id, RoleId = "SystemAdministrator" },
                         new IdentityUserRole<string> { UserId = user.Id, RoleId = "User" });
                     context.SaveChanges();
@@ -124,9 +125,9 @@ namespace GroupSpace.Data
                 supportedLanguages.Add("nl-BE");
                 foreach (Language l in Language.AllLanguages)
                 {
+                    Language.LanguageDictionary[l.Id] = l;
                     if (l.Id != "-")
                     {
-                        Language.LanguageDictionary[l.Id] = l;
                         if (l.IsSystemLanguage)
                             Language.SystemLanguages.Add(l);
                         supportedLanguages.Add(l.Id);

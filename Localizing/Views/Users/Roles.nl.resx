@@ -117,34 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Beheren groepen" xml:space="preserve">
-    <value>Beheren groepen</value>
+  <data name="Back to List" xml:space="preserve">
+    <value>Terug naar overzicht</value>
   </data>
-  <data name="Boodschappen" xml:space="preserve">
-    <value>Boodschappen</value>
+  <data name="Change Roles" xml:space="preserve">
+    <value>Rollen wijzigen</value>
   </data>
-  <data name="Categorieën" xml:space="preserve">
-    <value>Categorieën</value>
+  <data name="FirstName" xml:space="preserve">
+    <value>Voornaam</value>
   </data>
-  <data name="Gebruikersbeheer" xml:space="preserve">
-    <value>Gebruikersbeheer</value>
+  <data name="LastName" xml:space="preserve">
+    <value>Achternaam</value>
   </data>
-  <data name="Groep maken" xml:space="preserve">
-    <value>Groep maken</value>
+  <data name="Save" xml:space="preserve">
+    <value>Bewaren</value>
   </data>
-  <data name="Groepen" xml:space="preserve">
-    <value>Groepen</value>
+  <data name="SystemAdministrator" xml:space="preserve">
+    <value>Rol "SystemAdministrator"</value>
   </data>
-  <data name="Lidmaatschap aanvragen" xml:space="preserve">
-    <value>Lidmaatschap aanvragen</value>
+  <data name="User" xml:space="preserve">
+    <value>Rol "User"</value>
   </data>
-  <data name="Media" xml:space="preserve">
-    <value>Media</value>
+  <data name="UserAdministrator" xml:space="preserve">
+    <value>Rol "UserAdministrator"</value>
   </data>
-  <data name="Mediabeheer" xml:space="preserve">
-    <value>Mediabeheer</value>
-  </data>
-  <data name="Types" xml:space="preserve">
-    <value>Types</value>
+  <data name="UserName" xml:space="preserve">
+    <value>Gebruikersnaam</value>
   </data>
 </root>
