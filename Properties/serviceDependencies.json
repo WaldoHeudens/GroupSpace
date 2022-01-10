@@ -1,13 +1,6 @@
 {
   "dependencies": {
-    "mssql1": {
-      "type": "mssql",
-      "connectionId": "ConnectionStrings:GroupSpaceContext"
-    },
-    "mssql2": {
-      "type": "mssql",
-      "connectionId": "ConnectionStrings:IdentityContextConnection"
-    },
+    
     "mssql3": {
       "type": "mssql",
       "connectionId": "ConnectionStrings:ApplicationDbContextConnection"

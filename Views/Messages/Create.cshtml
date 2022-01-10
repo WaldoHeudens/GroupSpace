@@ -1,17 +1,27 @@
-﻿@model GroupSpace.Models.Message
+﻿@model GroupSpace.Models.MessageViewModel
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Nieuwe boodschap";
+    ViewData["Title"] = Localizer["Nieuwe boodschap"];
 }
 
-<h1>Nieuwe boodschap</h1>
+<h1>@Localizer["Nieuwe boodschap"]</h1>
 
-<h4>Boodschap</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="GroupIds" class="control-label"></label>
+                <select multiple="multiple" asp-for="GroupIds" class ="form-control" asp-items="ViewBag.GroupIds"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="DestinyIds" class="control-label"></label>
+                <select multiple="multiple" asp-for="DestinyIds" class ="form-control" asp-items="ViewBag.DestinyIds"></select>
+            </div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
@@ -19,27 +29,18 @@
             </div>
             <div class="form-group">
                 <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
+                <input type="textarea" rows="3" asp-for="Content" class="form-control" />
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Created" class="control-label"></label>
-                <input asp-for="Created" class="form-control" />
-                <span asp-validation-for="Created" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GroupID" class="control-label"></label>
-                <select asp-for="GroupID" class ="form-control" asp-items="ViewBag.GroupID"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Verzenden" class="btn btn-primary" />
+                <input type="submit" value=Localizer["Verzenden"] class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Terug naar overzicht</a>
+    <a asp-action="Index">Localizer["Terug naar overzicht"]</a>
 </div>
 
 @section Scripts {

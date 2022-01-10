@@ -74,9 +74,10 @@ namespace GroupSpace.Data
 
                 if (!context.Message.Any())   // Voeg enkele messages toe
                 {
-                    context.Message.AddRange(
-                             new Message { Title = "-", Content = "-", Created = DateTime.Now, GroupID = 1, SenderId = "-" },
-                             new Message { Title = "- (Naar gezin)", Content = "Een eerste boodschap", Created = DateTime.Now, GroupID = 2, SenderId = "-" });
+                    Message dummyMessage = new Message { Title = "-", Content = "-", Created = DateTime.Now, SenderId = "-" };
+                    MessageDestination dummymd = new MessageDestination { Deleted = DateTime.MinValue, Message = dummyMessage, Read = DateTime.Now, Received = DateTime.Now, ReceiverId = "-"};
+                    context.Message.Add(dummyMessage);
+                    context.MessageDestinations.Add(dummymd);
                     context.SaveChanges();
                 }
 

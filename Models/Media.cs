@@ -35,6 +35,7 @@ namespace GroupSpace.Models
         
         [Display(Name = "Categorieën")]
         public List<Category>? Categories { set; get; }
+
     }
 
     public class MediaType

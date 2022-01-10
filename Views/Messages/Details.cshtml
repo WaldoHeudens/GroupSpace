@@ -1,13 +1,15 @@
 ﻿@model GroupSpace.Models.Message
 
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "Boodschap lezen";
+    ViewData["Title"] = Localizer["Boodschap lezen"];
 }
 
-<h1>Details</h1>
+<h1>@Localizer["Boodschap lezen"]</h1>
 
 <div>
-    <h4>Boodschap</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -20,23 +22,40 @@
             @Html.DisplayNameFor(model => model.Content)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Content)
+            @Html.DisplayTextFor(model => model.Content)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class = "col-sm-2" >
             @Html.DisplayNameFor(model => model.Created)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Created)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Group)
+            @Localizer["Receivers"]
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Group.Name)
-        </dd>
+        <dt class = "col-sm-4 col-md-3 col-ld-2">
+            @Localizer["Read"]
+        </dt>
+        <dt class = "col-sm-6 col-md-7 col-ld-8">
+            @Localizer["By"]
+        </dt>
+        @foreach (MessageDestination item in Model.Destinations)
+        {
+            <dt class = "col-sm-2">
+            </dt>
+            <dd class = "col-sm-4 col-md-3 col-ld-2">
+                @if (item.Read < DateTime.Now)
+                {
+                    @item.Read.ToString();
+                }
+            </dd>
+            <dd class = "col-sm-6 col-md-7 col-ld-8">
+                @item.Receiver.FirstName 
+                @item.Receiver.LastName
+            </dd>
+        }
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ID">Wijzig</a> |
-    <a asp-action="Index">Terug naar overzicht</a>
+    <a asp-action="Index">@Localizer["Terug naar overzicht"]</a>
 </div>

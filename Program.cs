@@ -14,15 +14,18 @@ using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 
 // de connectionString moet manueel toegewezen worden om de nieuwe datacontext te koppelen aan onze bestaande databank
-var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));builder.Services.AddDbContext<global::GroupSpace.Data.ApplicationDbContext>((global::Microsoft.EntityFrameworkCore.DbContextOptionsBuilder options) =>
-    options.UseSqlServer(connectionString));
+var connectionStringServer = builder.Configuration.GetConnectionString("ApplicationDbContextConnectionServer");
+var connectionStringLocal = builder.Configuration.GetConnectionString("ApplicationDbContextConnectionLocal");
+
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionStringServer));
+builder.Services.AddDbContext<global::GroupSpace.Data.ApplicationDbContext>((global::Microsoft.EntityFrameworkCore.DbContextOptionsBuilder options) =>
+    options.UseSqlServer(connectionStringServer));
 
 builder.Services.AddDefaultIdentity<ApplicationUser>((IdentityOptions options) => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddLocalization(option => option.ResourcesPath = "Localizing");
 builder.Services.AddMvc()
        .AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix)
        .AddDataAnnotationsLocalization();
@@ -30,7 +33,6 @@ builder.Services.AddMvc()
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddLocalization(option => option.ResourcesPath = "Localizing");
 
 // Voeg MailKitEmailSender toe als IEmailSender
 builder.Services.AddTransient<IEmailSender, MailKitEmailSender>();

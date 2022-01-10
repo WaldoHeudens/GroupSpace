@@ -38,10 +38,13 @@ namespace GroupSpace.Services
             {
                 ApplicationUser user = await dbContext.Users
                                     .Include(u=>u.ActualGroup)
+                                        .ThenInclude(ag => ag.UserGroups)
+                                            .ThenInclude(ug => ug.User)
                                     .FirstOrDefaultAsync(u => u.UserName == name);
                 user.Groups = await dbContext.UserGroup
                                 .Where(ug => ug.UserId== user.Id && ug.Left > DateTime.Now && ug.Group.Ended > DateTime.Now)
                                 .Include(ug => ug.Group)
+                                .Include(ug => ug.User)
                                 .ToListAsync();
                 
 

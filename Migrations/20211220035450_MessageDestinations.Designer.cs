@@ -4,6 +4,7 @@ using GroupSpace.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GroupSpace.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211220035450_MessageDestinations")]
+    partial class MessageDestinations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +36,7 @@ namespace GroupSpace.Migrations
 
                     b.HasIndex("MediaId");
 
-                    b.ToTable("CategoryMedia", (string)null);
+                    b.ToTable("CategoryMedia");
                 });
 
             modelBuilder.Entity("GroupSpace.Areas.Identity.Data.ApplicationUser", b =>
@@ -142,7 +144,7 @@ namespace GroupSpace.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("GroupSpace.Models.Group", b =>
@@ -177,7 +179,7 @@ namespace GroupSpace.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Group", (string)null);
+                    b.ToTable("Group");
                 });
 
             modelBuilder.Entity("GroupSpace.Models.Language", b =>
@@ -200,7 +202,7 @@ namespace GroupSpace.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Language", (string)null);
+                    b.ToTable("Language");
                 });
 
             modelBuilder.Entity("GroupSpace.Models.Media", b =>
@@ -234,7 +236,7 @@ namespace GroupSpace.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("Media", (string)null);
+                    b.ToTable("Media");
                 });
 
             modelBuilder.Entity("GroupSpace.Models.MediaType", b =>
@@ -258,7 +260,7 @@ namespace GroupSpace.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MediaType", (string)null);
+                    b.ToTable("MediaType");
                 });
 
             modelBuilder.Entity("GroupSpace.Models.Message", b =>
@@ -288,7 +290,7 @@ namespace GroupSpace.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Message", (string)null);
+                    b.ToTable("Message");
                 });
 
             modelBuilder.Entity("GroupSpace.Models.MessageDestinations", b =>
@@ -323,7 +325,7 @@ namespace GroupSpace.Migrations
 
                     b.HasIndex("ReceiverId1");
 
-                    b.ToTable("MessageDestinations", (string)null);
+                    b.ToTable("MessageDestinations");
                 });
 
             modelBuilder.Entity("GroupSpace.Models.Token", b =>
@@ -348,7 +350,7 @@ namespace GroupSpace.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Token", (string)null);
+                    b.ToTable("Token");
                 });
 
             modelBuilder.Entity("GroupSpace.Models.UserGroup", b =>
@@ -384,7 +386,7 @@ namespace GroupSpace.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserGroup", (string)null);
+                    b.ToTable("UserGroup");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

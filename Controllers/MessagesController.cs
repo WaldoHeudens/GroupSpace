@@ -4,74 +4,127 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using System.Linq;
 
 namespace GroupSpace.Controllers
 {
     [Authorize]
     public class MessagesController : ApplicationController
     {
+        IStringLocalizer<MessagesController> _localizer;
 
-        public MessagesController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, ILogger<ApplicationController> logger) 
+        public MessagesController(ApplicationDbContext context, 
+                                    IHttpContextAccessor httpContextAccessor,
+                                    IStringLocalizer<MessagesController> localizer,
+                                    ILogger<ApplicationController> logger) 
             :base(context, httpContextAccessor, logger)
         {
+            _localizer = localizer;
         }
 
         // GET: Messages
-        public async Task<IActionResult> Index(string titleFilter, int selectedGroup, string orderBy, string selectedMode = "R")
+        public async Task<IActionResult> Index(string titleFilter, string messageFilter, string contentMessage, string orderBy, int? pageNumber, string selectedMode = "R")
         {
-            // Lijst alle message op.  We gebruiken Linq
-            var filteredMessages = from m in _context.Message
-                                   where selectedMode == "S" && m.SenderId == _user.Id
-                                   select m;
+            MessageIndexViewModel viewModel = new MessageIndexViewModel();
+            List<MessageViewModel> messages = new List<MessageViewModel>();
 
-            // Pas de groepfilter (selectedGroup) toe als deze niet leeg is
-            if (selectedGroup != 0)
-                filteredMessages = from m in filteredMessages where m.GroupID == selectedGroup select m;
+            // Lijst alle messages op die we ontvangen hebben
+            if (selectedMode == "R")
+            {
+                List<MessageDestination> messageDestinations = await _context.MessageDestinations
+                                       .Include(md => md.Message)
+                                       .Where(md => md.ReceiverId == _user.Id 
+                                                    && md.Deleted > DateTime.Now 
+                                                    && (string.IsNullOrEmpty(titleFilter) || md.Message.Title.Contains(titleFilter))
+                                                    && (string.IsNullOrEmpty(messageFilter) || md.Message.Title.Contains(messageFilter)))
+                                       .OrderBy (md => md.Received)
+                                       .ToListAsync();
+                foreach (MessageDestination md in messageDestinations)
+                {
+                    MessageViewModel mvm = new MessageViewModel
+                    { 
+                        Attachments = new List<Media>(),
+                        Content = md.Message.Content.Substring(0, Math.Min(20, md.Message.Content.Length)),
+                        Destinies = null,
+                        Groups = null,
+                        MessageId = md.Message.ID,
+                        Sent = md.Received,
+                        Title = md.Message.Title
+                    };
+                    messages.Add(mvm);
+                }
+            }
+            else
+            { 
+                List<Message> tempMessages = await _context.Message
+                                            .Where (m => m.SenderId == _user.Id
+                                                        && (string.IsNullOrEmpty(titleFilter) || m.Title.Contains(titleFilter))
+                                                        && (string.IsNullOrEmpty(messageFilter) || m.Title.Contains(messageFilter)))
+                                            .Include (m => m.Destinations)
+                                            .ThenInclude (m => m.Receiver)
+                                            .ToListAsync();
+                foreach (Message m in tempMessages)
+                {
+                    MessageViewModel mvm = new MessageViewModel
+                    {
+                        Attachments = new List<Media>(),
+                        Content = m.Content.Substring(0, Math.Min(20, m.Content.Length)),
+                        Destinies = (from d in m.Destinations
+                                    orderby d.Receiver.LastName + " " + d.Receiver.FirstName
+                                    select d.Receiver)
+                                    .ToList(),
+                        MessageId = m.ID,
+                        Sent = m.Created,
+                        Title = m.Title
+                    };
+                    messages.Add(mvm);
+                }
+            }
 
-            // Pas de titleFilter toe (als deze niet leeg is) en zorg dat de groep-instanties daaraan toegevoegd zijn en sorteer
-            if (!string.IsNullOrEmpty(titleFilter))
-                filteredMessages = from m in filteredMessages where m.Title.Contains(titleFilter) select m;
-
-            ViewData["TitleField"] = string.IsNullOrEmpty(orderBy) ? "Titles_Desc" : "";
-            ViewData["GroupField"] = orderBy == "Group" ? "Group_Desc" : "Group";
+            ViewData["TitleField"] = string.IsNullOrEmpty(orderBy) ? "Sent" : "";
+            ViewData["ContentField"] = orderBy == "Content" ? "Content_Desc" : "Content";
+            ViewData["SentField"] = orderBy == "Title" ? "Title_Desc" : "Title";
+            ViewData["OrderBy"] = orderBy;
 
             switch (orderBy)
             {
-                case "Group":
-                    filteredMessages = filteredMessages.OrderBy(m => m.Group.Name);
+                case "Title":
+                    messages = messages.OrderBy(m => m.Title).ToList();
                     break;
-                case "Group_Desc":
-                    filteredMessages = filteredMessages.OrderByDescending(m => m.Group.Name);
+                case "Title_Desc":
+                    messages = messages.OrderByDescending(m => m.Title).ToList();
                     break;
-                case "Titles_Desc":
-                    filteredMessages = filteredMessages.OrderByDescending(m => m.Title);
+                case "Content":
+                    messages = messages.OrderBy(m => m.Content).ToList();
+                    break;
+                case "Content_Desc":
+                    messages = messages.OrderByDescending(m => m.Content).ToList();
+                    break;
+                case "Sent":
+                    messages = messages.OrderBy(m => m.Sent).ToList();
                     break;
                 default:
-                    filteredMessages = filteredMessages.OrderBy(m => m.Title);
+                    messages = messages.OrderByDescending(m => m.Sent).ToList();
                     break;
             }
 
-            // Lijst van groepen 
-            IQueryable<Group> groupsToSelect = from g in _context.Group orderby g.Name select g;
+            //// Lijst van groepen 
+            //IQueryable<Group> groupsToSelect = from g in _context.Group orderby g.Name select g;
 
-            // Selectieveldje voor de mode van gebruik
+            //// Selectieveldje voor de mode van gebruik
             var modeItems = new List<SelectListItem>
             {
-                new SelectListItem{Value="R", Text="Ontvangen", Selected = selectedMode == "R" },
-                new SelectListItem{Value="S", Text="Verzonden", Selected = selectedMode == "S"}
+                new SelectListItem{Value="R", Text=_localizer["Ontvangen"], Selected = selectedMode == "R" },
+                new SelectListItem{Value="S", Text=_localizer["Verzonden"], Selected = selectedMode == "S"}
             };
 
-            // Maak een object van de view-model-class en voeg daarin alle wat we nodig hebben
-            MessageIndexViewModel messageIndexViewModel = new MessageIndexViewModel()
-            {
-                TitleFilter = titleFilter,
-                FilteredMessages = await filteredMessages.Include(s=>s.Group).ToListAsync(),
-                SelectedGroup = selectedGroup,
-                GroupsToSelect = new SelectList(await groupsToSelect.ToListAsync(), "Id", "Name", selectedGroup),
-                ModesToSelect = new SelectList(modeItems, "Value", "Text"),
-                SelectedMode = selectedMode
-            };
-            return View(messageIndexViewModel);
+            viewModel.Messages = new PaginatedList<MessageViewModel>(messages, messages.Count, 1, 10);
+            viewModel.ModesToSelect = new SelectList(modeItems, "Value", "Text");
+            viewModel.SelectedMode = selectedMode;
+            viewModel.TitleFilter = titleFilter;
+            viewModel.MessageFilter = messageFilter;
+            return View(viewModel);
         }
 
         // GET: Messages/Details/5
@@ -83,12 +136,25 @@ namespace GroupSpace.Controllers
             }
 
             var message = await _context.Message
-                .Include(m => m.Group)
-                .FirstOrDefaultAsync(m => m.ID == id);
+                                .Include(m => m.Destinations)
+                                    .ThenInclude(d => d.Receiver)
+                                .FirstOrDefaultAsync(m => m.ID == id);
             if (message == null)
             {
                 return NotFound();
             }
+
+            try
+            {
+                MessageDestination md = message.Destinations.FirstOrDefault(d => d.ReceiverId == _user.Id);
+                if (md.Read > DateTime.Now)
+                {
+                    md.Read = DateTime.Now;
+                    _context.Update(md);
+                    _context.SaveChangesAsync();
+                }
+            }
+            catch { }
 
             return View(message);
         }
@@ -96,9 +162,14 @@ namespace GroupSpace.Controllers
         // GET: Messages/Create
         public IActionResult Create()
         {
-            Message message = new Message() { Created = DateTime.Now };
-            ViewData["GroupID"] = new SelectList(_context.Group, "Id", "Name");
-            return View(message);
+            MessageViewModel model = new MessageViewModel
+            {
+                DestinyIds = new List<string>(),
+                GroupIds = new List<int>(), 
+            };
+            ViewData["GroupIds"] = new MultiSelectList(_user.Groups, "GroupId", "Group.Name");
+            ViewData["DestinyIds"] = new MultiSelectList(_user.ActualGroup.UserGroups, "User.Id", "User.FirstName");
+            return View(model);
         }
 
         // POST: Messages/Create
@@ -106,70 +177,53 @@ namespace GroupSpace.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,Content,Created,GroupID")] Message message)
+        public async Task<IActionResult> Create([Bind("Title,Content,Attachments,GroupIds, DestinyIds")] MessageViewModel model)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && (model.GroupIds != null || model.DestinyIds != null))
             {
-                message.Sender = _user;
+                if (model.DestinyIds == null)
+                    model.DestinyIds = new List<string>();
+
+                foreach (int id in model.GroupIds)
+                {
+                    List<string> ids = (from g in _user.Groups
+                                        where g.GroupId == id
+                                        select g.UserId)
+                                       .ToList();
+                    model.DestinyIds.AddRange(ids);
+                }
+                model.DestinyIds = model.DestinyIds.Distinct().ToList();
+                model.DestinyIds.Remove(_user.Id);
+                                   
+                List<MessageDestination> destinations = new List<MessageDestination>();
+
+                // Media
+                Message message = new Message
+                {
+                    Sender = await _context.Users.FirstOrDefaultAsync(u => u.Id == _user.Id),
+                    Content = model.Content,
+                    Created = DateTime.Now,
+                    Title = model.Title,
+                    Destinations = destinations
+                };
+                foreach (string id in model.DestinyIds)
+                {
+                    destinations.Add(new MessageDestination
+                    {
+                        Deleted = DateTime.MaxValue,
+                        Message = message,
+                        Read = DateTime.MaxValue,
+                        Received = DateTime.Now,
+                        ReceiverId = id
+                    });
+                }
                 _context.Add(message);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GroupID"] = new SelectList(_context.Group, "Id", "Name", message.GroupID);
-            return View(message);
-        }
-
-        // GET: Messages/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var message = await _context.Message.FindAsync(id);
-            if (message == null)
-            {
-                return NotFound();
-            }
-            ViewData["GroupID"] = new SelectList(_context.Group, "Id", "Name", message.GroupID);
-            return View(message);
-        }
-
-        // POST: Messages/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Content,Created,GroupID")] Message message)
-        {
-            if (id != message.ID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(message);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MessageExists(message.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["GroupID"] = new SelectList(_context.Group, "Id", "Name", message.GroupID);
-            return View(message);
+            ViewData["GroupIds"] = new MultiSelectList(_user.Groups, "GroupId", "Group.Name");
+            ViewData["DestinyIds"] = new MultiSelectList(_user.ActualGroup.UserGroups, "User.Id", "User.FirstName");
+            return View(model);
         }
 
         // GET: Messages/Delete/5
@@ -181,7 +235,6 @@ namespace GroupSpace.Controllers
             }
 
             var message = await _context.Message
-                .Include(m => m.Group)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (message == null)
             {
@@ -196,8 +249,11 @@ namespace GroupSpace.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var message = await _context.Message.FindAsync(id);
-            _context.Message.Remove(message);
+
+            var messageDestination = await _context.MessageDestinations
+                                    .FirstOrDefaultAsync(md => md.MessageId == id && md.ReceiverId == _user.Id);
+            messageDestination.Deleted = DateTime.Now;
+            _context.Update(messageDestination);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
